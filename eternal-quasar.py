@@ -20,7 +20,7 @@ class myThread (threading.Thread):
 		print("Exiting " + self.name)
 
 def renew_connection():
-	conn = TorCtl.connect(controlAddr="127.0.0.1", controlPort=9051, passphrase="tobaggan")
+	conn = TorCtl.connect(controlAddr="127.0.0.1", controlPort=9051, passphrase="yourpassphrase")
 	conn.send_signal("NEWNYM")
 	conn.close()
 
