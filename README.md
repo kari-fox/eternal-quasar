@@ -9,3 +9,5 @@ Pre-reqs:
   phantomjs, 
   follow the directions here to set up Tor control: sacharya.com/crawling-anonymously-with-tor-in-python, 
   must be run as sudo
+  
+Be sure to add your tor passphrase from Tor control setup on line 23 of the script.
